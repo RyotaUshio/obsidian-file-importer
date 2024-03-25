@@ -1,29 +1,31 @@
-# Obsidian Sample Plugin
+# Obsidian File Importer
 
-This is a modified version of https://github.com/obsidianmd/obsidian-sample-plugin.
+A simple UI for importing files from outside your vault.
 
-## Differences from the original sample plugin
+## Credits
 
-- `*.ts` files are put in the `src` directory
-- The plugin class definition and settings-related code are separated into `main.ts` and `settings.ts`
-- [Release GitHub action](https://docs.obsidian.md/Plugins/Releasing/Release+your+plugin+with+GitHub+Actions) is already there
-  - Don't forget to go to `Settings > Actions > General > Workflow permissions` and turn on `Read and write permissions`
-- The default branch has been renamed `main`
+Some code are borrowed from [Obsidian Importer](https://github.com/obsidianmd/obsidian-importer), which is distributed under the MIT license:
 
-## Usage
+```
+MIT License
 
-1. Create a new repository using this template ("Use this template" > "Create a new repository")
-2. Clone the created repository
-3. Modify at least the `id` & `name` fields in `manifest.json`.
-4. Modify `package.json` accordingly.
-5. Run `npm i` to install the dependencies
-6. Run `npm run dev` or `npm run build` to compile your plugin
+Copyright (c) 2023 Obsidian
 
-### Releasing your plugin
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. If you haven't, go to `Settings > Actions > General > Workflow permissions` and turn on `Read and write permissions`
-2. Bump the version in `manifest.json` (and `package.json`) and then commit & push the change
-3. `git tag -a <version> -m "<version>"`
-4. `git push origin <version>`. This triggers the release action.
-5. When the action is completed, go to the release page of your repository. You will find a newly created draft release.
-6. Release the draft when you're ready.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
