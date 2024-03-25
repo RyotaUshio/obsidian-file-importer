@@ -1,5 +1,5 @@
 import { NodePickedFile, WebPickedFile } from 'filesystem';
-import { Platform, Plugin, normalizePath } from 'obsidian';
+import { PaneType, Platform, Plugin, TFolder, normalizePath, Keymap } from 'obsidian';
 
 
 export default class FileImporterPlugin extends Plugin {
@@ -12,23 +12,25 @@ export default class FileImporterPlugin extends Plugin {
 				if (!folder) return false;
 
 				if (!checking) {
-					for (const file of this.getFile() ?? []) {
-						file.read()
-							.then(async (buffer) => {
-								const tFile = await this.app.vault.createBinary(
-									// @ts-ignore
-									this.app.vault.getAvailablePath(normalizePath(folder.path + '/' + file.basename), file.extension),
-									buffer
-								);
-
-								this.app.workspace.getLeaf(true).openFile(tFile);
-							})
-					}
+					this.importFilesToFolder(folder, this.app.lastEvent ? Keymap.isModEvent(this.app.lastEvent) : undefined);
 				}
 
 				return true;
 			}
 		});
+
+		this.registerEvent(this.app.workspace.on('file-menu', (menu, folder) => {
+			if (folder instanceof TFolder) {
+				menu.addItem((item) => {
+					item.setSection('action-primary')
+						.setTitle('Import files to this folder...')
+						.setIcon('lucide-import')
+						.onClick((evt) => {
+							this.importFilesToFolder(folder, Keymap.isModEvent(evt));
+						})
+				})
+			}
+		}));
 	}
 
 	/**
@@ -37,7 +39,7 @@ export default class FileImporterPlugin extends Plugin {
 	 * 
 	 * Original: https://github.com/obsidianmd/obsidian-importer/blob/13604d6fb2d103b25cca4899aba9fc236825c5a7/src/format-importer.ts#L37
 	 */
-	getFile(options?: { name?: string, extensions?: string[], allowMultiple?: boolean }) {
+	getFiles(options?: { name?: string, extensions?: string[], allowMultiple?: boolean }) {
 		const name = options?.name;
 		const extensions = options?.extensions;
 		const allowMultiple = options?.allowMultiple ?? false;
@@ -72,6 +74,26 @@ export default class FileImporterPlugin extends Plugin {
 				}
 			});
 			inputEl.click();
+		}
+	}
+
+	importFilesToFolder(folder: TFolder, paneType?: PaneType | boolean) {
+		paneType = paneType ?? true;
+
+		const files = this.getFiles();
+		if (files) {
+			for (const file of files) {
+				file.read()
+					.then(async (buffer) => {
+						const tFile = await this.app.vault.createBinary(
+							// @ts-ignore
+							this.app.vault.getAvailablePath(normalizePath(folder.path + '/' + file.basename), file.extension),
+							buffer
+						);
+
+						this.app.workspace.getLeaf(paneType).openFile(tFile);
+					})
+			}
 		}
 	}
 }
